@@ -1,0 +1,41 @@
+{% extends "base.html" %} 
+{% load static %} // Cargar archivos estáticos
+ {%block title %}ChatIA Home{% endblock %} 
+ 
+{%block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}" />
+<div>
+  <h1>Welcome to Chatbot-GPT</h1>
+  <div class="container button">
+    <button type="button" class="btn btn-primary">
+      <a href="{% url 'login' %}">Login</a>
+    </button>
+    <button type="button" class="btn btn-primary">
+      <a href="{% url 'register' %}">Register</a>
+    </button>
+  </div>
+  <div class="container Warning">
+    <h3>Warning</h3>
+    <p>
+      This is a test project, so all users created to test the application will
+      be removed from the database after 24 hours from its creation. This is an
+      automatic process. Thanks for understanding
+    </p>
+  </div>
+  <div class="container ReadMe">
+    <h3>ReadMe</h3>
+    <p>
+      This is a test project, designed in Django, and created to show certain
+      skills as a backend developer; It is an artificial intelligence chat,
+      connected to the external OpenAI API that manages to generate the chat
+      experience with said technology, it has a Postgres database to save users
+      and their conversation histories, that is, it saves all the messages that
+      you send, I have also incorporated Celery to execute the asynchronous task
+      of eliminating users that exceed 24 hours of creation and that relies on
+      Redis as a message broker. In addition, all these services are executed
+      and orchestrated within Docker and Docker-compose. The code for the entire
+      project is on my GitHub page.
+    </p>
+  </div>
+</div>
+{% endblock %}

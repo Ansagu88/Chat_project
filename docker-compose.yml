@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  redis:
+    container_name: redis
+    image: redis:7.2.3-alpine3.18
+    ports:
+      - 6379:6379
+    
+  django:
+    container_name: django
+    build: 
+      context: .
+    command: gunicorn core.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/Chat_project
+    ports:
+      - 8001:8000
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=q8ah&*i2llr2+_ak)^197#w0=oz7^*-6!dm2l@)oeqa@9-fc)1
+      - ALLOWED_HOSTS=127.0.0.1,localhost
+    env_file:
+      - .env
+    depends_on:
+      - redis
+
+  postgres:
+    container_name: postgres
+    image: postgres:14.1-alpine
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_HOST=127.0.0.1,localhost
+      - POSTGRES_DB=django_db
+      - POSTGRES_USER=django_user
+      - POSTGRES_PASSWORD=django_password
+    env_file:
+      - .env
+    volumes:
+      - .:/Chat_project/postgresql/data
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:5.7
+    restart: always
+    ports:
+      - 5050:80
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=andecoreing@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=Thiago0218**
+    env_file:
+      - .env
+    volumes:
+      - .:/Chat_project/pgadmin
+    depends_on:
+      - postgres
+
+  celery_worker:
+    build: .
+    command: ["./wait-for-it.sh", "redis:6379", "--", "celery", "-A", "core", "worker", "--loglevel=info"]
+    volumes:
+      - .:/Chat_project
+    environment:
+      - ALLOWED_HOSTS=127.0.0.1,localhost
+    depends_on:
+      - django
+      - redis
+
+  celery_beat:
+    build: .
+    command: ["./wait-for-it.sh", "redis:6379", "--", "celery", "-A", "core", "beat", "--loglevel=info"]
+    volumes:
+      - .:/Chat_project
+    environment:
+      - ALLOWED_HOSTS=127.0.0.1,localhost
+    depends_on:
+      - django
+      - redis

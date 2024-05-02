@@ -1,0 +1,59 @@
+
+
+/* Centrar el título */
+h1 {
+    padding-top: 30px;
+    text-align: center;
+    margin-bottom: 20px; /* Agregado: espacio entre el título y los botones */
+}
+
+h3 {
+    text-align: center;
+    margin-bottom: 20px; /* Agregado: espacio entre el título y los botones */
+}
+
+a {
+    text-decoration: none;
+    color: whitesmoke;
+    font-weight: bold;
+
+}
+a:active {
+    text-decoration: none !important;
+    color: whitesmoke !important;
+}
+
+
+.button {
+    font-weight: bold;
+    color: whitesmoke !important;
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Agregado: espacio entre los botones */
+    margin-bottom: 20px; /* Agregado: separación entre los botones y el título */
+    margin-top: 20px;
+    padding-top: 20px;
+}
+
+
+/* Contenedor "warning" */
+.Warning {
+    margin-top: 15px;
+    display: block;
+    justify-content: center;
+    align-items: center; /* Agregado: centrar el contenido verticalmente */
+    background-color: rgb(248, 248, 194) !important; /* Agregado: fondo de color amarillo claro */
+    padding: 10px; /* Agregado: espacio interno */
+    border-radius: 8px;
+}
+
+/* Contenedor "readme" */
+.ReadMe {
+    display: block;
+    justify-content: center;
+    align-items: center; /* Agregado: centrar el contenido verticalmente */
+    background-color: lightgreen; /* Agregado: fondo de color verde claro */
+    padding: 10px; /* Agregado: espacio interno */
+    margin-top: 15px;
+    border-radius: 8px;
+}
