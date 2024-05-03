@@ -1,8 +1,9 @@
+from logging import config
 import os
-import environ
+from decouple import config
 from pathlib import Path
 import openai
-from openai.error import RateLimitError
+
 
 from .models import Chat
 from django.http import JsonResponse
@@ -12,7 +13,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required 
 
-openai_api_key = os.environ.get('OPENAI_API_KEY')
+openai_api_key = config('OPENAI_API_KEY')
 openai.api_key = openai_api_key
 
 def ask_openai(message):
@@ -74,9 +75,10 @@ def chatbot(request):
         message = request.POST.get('message')
         try:
             response = ask_openai(message) 
-        except RateLimitError as e:
-            return JsonResponse({'error': 'You exceeded your current quota, please contact support and check your plan and billing details.', 'exception': str(e)}, safe=False, status=400)
-
+        except openai.Error as e:
+            if 'rate_limit' in str(e):
+                return JsonResponse({'error': 'You exceeded your current quota, please contact support and check your plan and billing details.', 'exception': str(e)}, safe=False, status=400)
+                
         chat = Chat(user=request.user, message=message, response=response, created_at=timezone.now())
         chat.save()
         return JsonResponse({'message': message, 'response': response})
